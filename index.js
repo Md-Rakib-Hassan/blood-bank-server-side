@@ -10,8 +10,8 @@ require('dotenv').config();
 // middleware
 app.use(cors({
     origin:['http://localhost:5173' ],
-    // credentials:true,           
-    // optionSuccessStatus:200
+    credentials:true,           
+    optionSuccessStatus:200
   }));
   app.use(express.json());
   app.use(cookieParser());
@@ -49,11 +49,15 @@ const client = new MongoClient(uri, {
 
       app.get('/api/v1/search-doner', async (req, res) => {
         const donorsCollection= dataBase.collection('users');
-        const { blood_group, state, city, email } = req.body;
-        
-    
+        let { blood_group, state, city, email } = req.query;
+
+        if(blood_group=='A ')blood_group='A+'
+        else if(blood_group=='B ')blood_group='B+'
+        else if(blood_group=='O ')blood_group='O+'
+        else if(blood_group=='AB ')blood_group='AB+'
+
         // Build the query based on the provided parameters
-        let query = {role:'donor'};
+        let query = {};
 
         if(blood_group){
           query['blood_group']=blood_group;
@@ -69,10 +73,14 @@ const client = new MongoClient(uri, {
         if(email){
         query['email']=email;
         }
+
+        console.log(query);
     
         try {
           // Find donors in the database based on the query
           const donors = await donorsCollection.find(query).toArray();
+          // console.log(query);
+          // console.log(donors);
     
           // Send the list of donors as the response
           res.send(donors);
