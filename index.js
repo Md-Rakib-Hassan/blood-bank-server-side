@@ -111,6 +111,15 @@ async function run() {
 
     })
 
+    app.get('/api/v1/upazilas', async (req, res) => {
+      console.log(req.params.email);
+      const Collection = dataBase.collection("upazilas");
+      const coursor = Collection.find()
+      const result = await coursor.toArray();
+      res.send(result);
+
+    })
+
 
 
 
