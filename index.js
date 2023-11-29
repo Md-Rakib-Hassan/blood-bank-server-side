@@ -120,6 +120,15 @@ async function run() {
 
     })
 
+    app.get('/api/v1/upazilas/:district_id', async (req, res) => {
+      console.log(req.params.email);
+      const Collection = dataBase.collection("upazilas");
+      const coursor = Collection.find({district_id:`${req.params.district_id}`})
+      const result = await coursor.toArray();
+      res.send(result);
+
+    })
+
 
 
 
