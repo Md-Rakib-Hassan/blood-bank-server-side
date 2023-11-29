@@ -47,6 +47,41 @@ const client = new MongoClient(uri, {
         res.send(result);
       })
 
+      app.get('/api/v1/search-doner', async (req, res) => {
+        const donorsCollection= dataBase.collection('users');
+        const { blood_group, state, city, email } = req.body;
+        
+    
+        // Build the query based on the provided parameters
+        let query = {role:'donor'};
+
+        if(blood_group){
+          query['blood_group']=blood_group;
+        }
+
+        if(state){
+          query['state']=state;
+        }
+
+        if(city){
+          query['city']=city;
+        }
+        if(email){
+        query['email']=email;
+        }
+    
+        try {
+          // Find donors in the database based on the query
+          const donors = await donorsCollection.find(query).toArray();
+    
+          // Send the list of donors as the response
+          res.send(donors);
+        } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+        }
+      });
+
 
 
 
