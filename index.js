@@ -49,7 +49,7 @@ async function run() {
 
     app.get('/api/v1/search-doner', async (req, res) => {
       const donorsCollection = dataBase.collection('users');
-      let { blood_group, state, city, email } = req.query;
+      let { blood_group, state, city, email,role } = req.query;
 
       if (blood_group == 'A ') blood_group = 'A+'
       else if (blood_group == 'B ') blood_group = 'B+'
@@ -57,7 +57,7 @@ async function run() {
       else if (blood_group == 'AB ') blood_group = 'AB+'
 
       // Build the query based on the provided parameters
-      let query = {};
+      let query = {role:role};
 
       if (blood_group) {
         query['blood_group'] = blood_group;
@@ -98,7 +98,16 @@ async function run() {
       const Collection = dataBase.collection("users");
       const coursor = Collection.find({ email: `${req.params.email}` })
       const result = await coursor.toArray();
-      res.send(result[0]);
+      res.send(result);
+
+    })
+
+    app.get('/api/v1/districts', async (req, res) => {
+      console.log(req.params.email);
+      const Collection = dataBase.collection("districts");
+      const coursor = Collection.find()
+      const result = await coursor.toArray();
+      res.send(result);
 
     })
 
