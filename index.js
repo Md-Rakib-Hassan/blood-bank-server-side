@@ -129,6 +129,31 @@ async function run() {
 
     })
 
+    app.put('/api/v1/update-profile/:id',async (req, res) => {
+      const id=req.params.id;
+      const filter={_id: new ObjectId(id)}
+      const options= {upsert: true};
+      const Collection = dataBase.collection("users");
+      const updatedProfile=req.body;
+
+      const user={
+          
+
+        $set: {
+          name: updatedProfile.name,
+          blood_group: updatedProfile.blood_group,
+          district: updatedProfile.district,
+          upazila: updatedProfile.upazila,
+          
+        },
+      }
+
+      const result= await Collection.updateOne(filter,user,options);
+      res.send(result);
+
+
+    })
+
 
 
 
